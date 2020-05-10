@@ -1,12 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const initDefaultValues = require('./src/schemas/initDefaultValues');
 const port = 8000;
-app.use(bodyParser.urlencoded({ extended: true }));
 
-require('./src/routes')(app);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('images'));
 
 mongoose.connect("mongodb://localhost:27017/perfume_shop",{useNewUrlParser: true, useUnifiedTopology:true},function(err){
     if(err) return console.log(err);
@@ -20,4 +20,7 @@ mongoose.connect("mongodb://localhost:27017/perfume_shop",{useNewUrlParser: true
         console.log("Server started.");
     });
 });
+
+require('./src/routes')(app);
+
 

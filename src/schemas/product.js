@@ -64,11 +64,11 @@ const productSchema = mongoose.Schema({
     },
     comments:{
         type:[commentSchema],
-        default: undefined
+
     },
     amounts:{
         type:[AmountSchema],
-        default:undefined
+
     },
     stars:{
         type:Number,
@@ -82,7 +82,7 @@ const productSchema = mongoose.Schema({
         type:Boolean,
         default: false
     },
-    image:Buffer
+    image:String
 });
 
 module.exports = mongoose.model('Product', productSchema);

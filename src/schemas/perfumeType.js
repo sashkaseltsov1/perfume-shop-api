@@ -7,7 +7,13 @@ const perfumeTypeSchema = mongoose.Schema({
         required:true,
         unique:true,
         index: true,
-    }
+    },
+    products:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        }
+    ]
 });
 
 module.exports = mongoose.model('PerfumeType', perfumeTypeSchema);
