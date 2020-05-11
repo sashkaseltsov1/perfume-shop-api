@@ -1,28 +1,5 @@
 const mongoose = require('mongoose');
 
-const AmountSchema = mongoose.Schema({
-    amount:{
-        type:Number,
-        required:true
-    },
-    cost:{
-        type:Number,
-        required:true
-    },
-    count:{
-        type:Number,
-        required:true
-    },
-    isDiscount:{
-        type:Boolean,
-        default:false
-    },
-    discountCost:{
-        type:Number,
-        default:undefined
-    }
-});
-
 const commentSchema = mongoose.Schema({
     username:{
         type:String,
@@ -45,30 +22,17 @@ const productSchema = mongoose.Schema({
         type:String,
         required:true,
     },
-    brand:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Brand',
+    amount:{
+        type:Number,
         required:true,
     },
-    gender:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Gender',
+    fullPrise:{
+        type:Number,
+        required:true,
     },
-    fragrance:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Fragrance',
-    }],
-    perfumeType:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'PerfumeType'
-    },
-    comments:{
-        type:[commentSchema],
-
-    },
-    amounts:{
-        type:[AmountSchema],
-
+    count:{
+        type:Number,
+        default:0
     },
     stars:{
         type:Number,
@@ -78,11 +42,39 @@ const productSchema = mongoose.Schema({
         type:String,
         default: 'Some description'
     },
+    isDiscount:{
+        type:Boolean,
+        default:false
+
+    },
+    discountPrise:Number,
     new: {
         type:Boolean,
         default: false
     },
-    image:String
+    image:String,
+    brand:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Brand',
+        required:true,
+    },
+    gender:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Gender',
+        required:true,
+    },
+    fragrance:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Fragrance',
+    }],
+    perfumeType:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'PerfumeType',
+        required:true,
+    },
+    comments:{
+        type:[commentSchema],
+    },
 });
 
 module.exports = mongoose.model('Product', productSchema);
