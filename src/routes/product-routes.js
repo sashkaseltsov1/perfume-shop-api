@@ -3,8 +3,8 @@ const multer = require('multer');
 const upload = multer({ dest: './uploads' });
 const path = require('path');
 const fs = require('fs');
-module.exports = function (app) {
 
+module.exports =  (app)=> {
 
     const parseQueryToObj = (queries) => {
         const filters = {
@@ -13,7 +13,7 @@ module.exports = function (app) {
             fragrance: queries.fragrance,
             perfumeType: queries.perfumeType,
             isDiscount:queries.isDiscount,
-            new:queries.isNew
+            new:queries.new
         };
         const toObject = (query, key) => {
             if (query !== undefined)
@@ -39,22 +39,6 @@ module.exports = function (app) {
     };
 
     const getPage = (query, arr, err)=>{
-        /*let portion = query.portion;
-        portion = portion===undefined? 12: Number(portion);
-        let pageSize = (typeof portion !=="number" || portion<12 || !Number.isInteger(portion))? 12: portion;
-        pageSize = pageSize>30? 30:pageSize;
-        pageSize = pageSize>arr.length? arr.length: pageSize;
-
-        let pageCount = arr.length===0? 1:Math.ceil(arr.length/pageSize);
-
-        let page = query.page;
-        page = (page===undefined)? 1: Number(page);
-        let p = (page===undefined || typeof page !=="number" || page<1 || !Number.isInteger(page))? 1: page;
-        p = p>pageCount?pageCount:p;
-
-        let end = p*pageSize>arr.length? arr.length:p*pageSize;
-        let begin = p*pageSize-pageSize;*/
-
         let portion = query.portion;
         portion = portion===undefined? 12: Number(portion);
         portion = (typeof portion !=="number" || portion<12 || !Number.isInteger(portion))? 12: portion;
@@ -82,6 +66,7 @@ module.exports = function (app) {
     };
 
     app.get('/products', (req, res)=>{
+        console.log('get2')
         let result = parseQueryToObj(req.query);
 
         let sortObj = {};
@@ -98,19 +83,12 @@ module.exports = function (app) {
             });
 
             let page = getPage(req.query, products, err);
+            console.log(page)
             res.send(page);
 
         });
     });
     app.post('/products',upload.single('image'), (req, res)=>{
-
-
-
-
-
-
-
-
         if(req.file!==undefined)
         {
             const tempPath = req.file.path;
@@ -119,18 +97,7 @@ module.exports = function (app) {
                 fs.rename(tempPath, targetPath, err => {
                     if (err) return res.send(err);
                     let product = new Product(req.body);
-                    product.image=req.file.filename+'.jpg';
-                    /*let product = new Product({
-                        name:req.body.name,
-                        amount:req.body.amount,
-                        fullPrise:req.body.fullPrise,
-                        count:req.body.count,
-                        image:req.file.filename+'.jpg',
-                        brand:req.body.brand,
-                        fragrance:req.body.fragrance,
-                        gender: req.body.gender,
-                        perfumeType:req.body.perfumeType,
-                        });*/
+                    product.image='http://176.197.36.4:8000/'+req.file.filename+'.jpg';
 
                     product.save((err)=> {
                         if (err) {
