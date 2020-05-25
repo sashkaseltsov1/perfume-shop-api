@@ -48,7 +48,7 @@ const productSchema = mongoose.Schema({
 
     },
     discountPrise:Number,
-    new: {
+    isNovelty: {
         type:Boolean,
         default: false
     },
