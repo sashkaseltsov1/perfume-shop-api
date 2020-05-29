@@ -17,7 +17,6 @@ module.exports.signup = async (req, res)=>{
         errorHandler(res, 500,null, 'Такой пользователь уже существует');
         return;
     }
-
     let salt = bcrypt.genSaltSync(10);
     let password = req.body.password;
     if (password.length>30 || password.length<6) {
@@ -33,10 +32,7 @@ module.exports.signup = async (req, res)=>{
     }
     return res.status(200).json({message:'Регистрация прошла успешно', user:user})
 };
-module.exports.me = (req, res)=>{
 
-    res.status(200).json({user:req.user});
-};
 module.exports.refreshToken = async (req, res)=>{
     let decoded;
     try{
