@@ -5,7 +5,10 @@ module.exports.getUser = async (req, res)=>{
 
     if(req.user){
         try{
-            let user =await User.findById(req.user._id, '-_id -password -refreshToken');
+            let user =await User.
+            findById(req.user._id, '-_id -password -refreshToken').
+            populate({path:'orders', select:'_id address createdAt state totalPrise',
+                options:{ sort: { 'createdAt': -1 }, limit:10 }});
             if(user) {
                 res.status(200).json({user});
             } else {
@@ -14,7 +17,6 @@ module.exports.getUser = async (req, res)=>{
         }catch (e) {
             errorHandler(res, 400,e);
         }
-
     }else{
         errorHandler(res, 400,null,'Invalid user type');
     }

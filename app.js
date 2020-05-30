@@ -25,10 +25,12 @@ const filters = require('./src/routes/filters');
 const products = require('./src/routes/products');
 const auth = require('./src/routes/auth');
 const user = require('./src/routes/user');
+const orders = require('./src/routes/orders');
 
 app.use('/api/filters', filters);
 app.use('/api/products', products);
 app.use('/api/auth', auth);
 app.use('/api/user', user);
+app.use('/api/orders', orders);
 
 module.exports=app;

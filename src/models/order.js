@@ -5,10 +5,12 @@ const orderSchema = mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
+        required:true
     },
     products:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Product',
+        required:true
     }],
     address:{
         type:String,
@@ -16,28 +18,24 @@ const orderSchema = mongoose.Schema({
     },
     paymentType:{
         type:String,
-        required:true
+        enum:['Наложенный платеж'],
+        default: 'Наложенный платеж',
     },
     state:{
-      type:String,
-      default: 'Принят на рассмотрение'
-    },
-    deliveryType:{
         type:String,
-        required:true
+        enum:['Принят на рассмотрение', 'Одобрен', 'Доставка','Завершен'],
+        default: 'Принят на рассмотрение'
     },
     totalPrise:{
         type:Number,
         required:true
     },
-    createdAt: {
-        type:Date,
-        default:Date.now()
-    },
     history:[{
         state:String,
-        date:Date
+        date:Date,
     }]
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('Order', orderSchema);
