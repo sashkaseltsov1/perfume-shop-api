@@ -5,17 +5,17 @@ const config = require('./config');
 
 mongoose.set('useFindAndModify', false);
 mongoose.connect(config.dbUrl,
-    {useNewUrlParser: true, useUnifiedTopology:true},
-    (err)=>{
-        if(err) return console.log(err);
+    {useNewUrlParser: true, useUnifiedTopology: true},
+    (err) => {
+        if (err) return console.log(err);
 
-        mongoose.connection.db.listCollections().toArray((err, names)=> {
+        mongoose.connection.db.listCollections().toArray((err, names) => {
             if (err) return console.log(err);
-            else if(names.length===0) initDefaultValues();
+            else if (names.length === 0) initDefaultValues();
         });
 
-        app.listen(config.port, ()=>console.log("Server started."));
-});
+        app.listen(config.port, () => console.log("Server started."));
+    });
 
 
 

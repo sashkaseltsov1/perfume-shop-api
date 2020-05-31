@@ -9,7 +9,6 @@ const opt = {
 
 module.exports = passport=>{
     passport.use(new strategy(opt, async(payload, done)=>{
-        console.log(payload)
         try{
             const user = await User.findById(payload._id).select('_id name email role');
             if(user){

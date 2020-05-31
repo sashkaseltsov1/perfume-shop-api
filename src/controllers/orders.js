@@ -4,16 +4,26 @@ const Product = require('../models/product');
 const errorHandler = require('./utils/error-handler');
 
 module.exports.addOrder = async (req, res)=>{
-    if(!req.user) return errorHandler(res, 400,null,'Invalid user type');
-    if(!req.body.products) return errorHandler(res, 400,null,'Invalid array of products');
+    if(!req.user) {
+        errorHandler(res, 400,null,'Invalid user type');
+        return;
+    }
+    if(!req.body.products) {
+        errorHandler(res, 400,null,'Invalid array of products');
+        return;
+    }
     let user;
     let orderPrise;
     let productIdArray;
     try{
         user =await User.findById(req.user._id);
-        if(!user) return errorHandler(res, 404,null, 'User not found');
+        if(!user) {
+            errorHandler(res, 404,null, 'User not found');
+            return;
+        }
     }catch (e) {
-        return errorHandler(res, 400,e);
+        errorHandler(res, 400,e);
+        return;
     }
     try{
         productIdArray = req.body.products.map(id=>(id));
@@ -22,7 +32,8 @@ module.exports.addOrder = async (req, res)=>{
         console.log(productPrises)
         orderPrise = productPrises.reduce((sum, value)=>(sum+value));
     }catch (e) {
-        return errorHandler(res, 400,e);
+        errorHandler(res, 400,e);
+        return;
     }
     let order = new Order({
         user:user._id,
@@ -37,7 +48,7 @@ module.exports.addOrder = async (req, res)=>{
         await user.save();
         res.status(200).json({message: 'Заказ принят к рассмотрению'});
     } catch (e) {
-        return errorHandler(res, 400,e);
+        errorHandler(res, 400,e);
     }
 };
 
