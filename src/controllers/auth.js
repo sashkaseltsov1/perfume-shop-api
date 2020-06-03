@@ -66,7 +66,6 @@ module.exports.refreshToken = async (req, res)=>{
     updateTokens(res, user);
 };
 module.exports.signin = async (req, res)=>{
-
     let candidate = await User.findOne({email:req.body.email});
     if(candidate){
         const isValidPassword = bcrypt.compareSync(req.body.password, candidate.password);
@@ -79,5 +78,6 @@ module.exports.signin = async (req, res)=>{
         res.status(401).json({message: 'Не верный e-mail или пароль. Попробуйте снова'})
     }
 };
+
 
 

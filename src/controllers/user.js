@@ -38,13 +38,17 @@ module.exports.editUser = async (req, res)=>{
         }
         const isValidPassword = bcrypt.compareSync(req.body.password, user.password);
         if(!isValidPassword) {
-            errorHandler(res, 400, null, 'Пароли не совпадают');
+            errorHandler(res, 400, null, 'Введен неверный пароль');
             return;
         }
         let salt = bcrypt.genSaltSync(10);
         user.password = bcrypt.hashSync(req.body.newPassword, salt);
+    }else{
+        if(req.body.newPassword){
+            errorHandler(res, 400, null, 'Введите старый пароль');
+            return;
+        }
     }
-
     user.name=req.body.name;
     user.lastname=req.body.lastname;
     user.phone=req.body.phone;
@@ -55,8 +59,4 @@ module.exports.editUser = async (req, res)=>{
     }catch (e) {
         errorHandler(res, 500, e);
     }
-
-
-
-
 };

@@ -51,4 +51,26 @@ module.exports.addOrder = async (req, res)=>{
         errorHandler(res, 400,e);
     }
 };
+module.exports.getOrder = async (req, res)=>{
+    let orderId = req.params.id;
+    let order;
+    try {
+        order =await Order.findById(orderId).populate('perfumeType').populate({
+            path:'products',
+            populate: { path: 'perfumeType' },
+            select:'_id isNovelty isDiscount image fullPrise name perfumeType'});
+    }catch (e) {
+        errorHandler(res, 500,e);
+        return;
+    }
+    if(order){
+        if(!order.user._id.equals(req.user._id)){
+            errorHandler(res, 403,null, 'Access denied');
+            return;
+        }
+        res.status(200).json({order:order});
+    }else{
+        errorHandler(res, 404,null, 'Order not found');
+    }
+};
 
