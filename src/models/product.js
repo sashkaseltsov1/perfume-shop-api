@@ -3,17 +3,21 @@ const mongoose = require('mongoose');
 const commentSchema = mongoose.Schema({
     username:{
         type:String,
-        required:true
+        default:'Гость'
     },
     stars:{
         type:Number,
-        required:true
+        required:true,
+        enum:[
+            1,2,3,4,5
+        ]
     },
     message:{
         type:String,
-        default:undefined
-    },
-    created:{ type: Date, default: Date.now }
+        default:'...'
+    }
+},{
+    timestamps: true
 });
 
 const productSchema = mongoose.Schema({

@@ -3,7 +3,45 @@ const fs = require('fs');
 const Product = require('../models/product');
 const TransformToCondition = require('./utils/products-utils/transformQueryToCondition');
 const getPage = require('./utils/products-utils/get-page');
+const errorHandler = require('../controllers/utils/error-handler');
+module.exports.addComment = async (req, res)=>{
+    let productId = req.params.id;
+    try {
+        let product =await Product.findById(productId);
+        if(product){
+            product.comments.push({...req.body});
+            try {
+                await product.save();
+                res.status(200).json({comment:product.comments.pop()});
+            }catch (e) {
+                errorHandler(res, 500,e);
+            }
+        }else{
+            errorHandler(res, 404,null,'Product not found');
+        }
+    }catch (e) {
+        errorHandler(res, 500,e);
+    }
+};
 
+module.exports.getProduct = async (req, res)=>{
+    let productId = req.params.id;
+    let product;
+    try {
+        product =await Product.findById(productId).
+        populate('perfumeType').
+        populate('brand').
+        populate('fragrance').
+        populate('gender');
+        if(product){
+            res.status(200).json({product});
+        }else{
+            errorHandler(res, 404,null, 'Product not found');
+        }
+    }catch (e) {
+        errorHandler(res, 500,e);
+    }
+};
 module.exports.getAll = (req, res)=>{
     let result;
     try {
