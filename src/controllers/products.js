@@ -4,12 +4,26 @@ const Product = require('../models/product');
 const TransformToCondition = require('./utils/products-utils/transformQueryToCondition');
 const getPage = require('./utils/products-utils/get-page');
 const errorHandler = require('../controllers/utils/error-handler');
+
+
+
 module.exports.addComment = async (req, res)=>{
+    if(!req.body.stars ){
+        errorHandler(res, 400,null,'Пожалуйста, оцените этот товар');
+        return;
+    }
     let productId = req.params.id;
     try {
         let product =await Product.findById(productId);
         if(product){
+            let ratesCount = product.comments.length;
+            let overallRating = product.stars;
+            let newRating = parseInt(req.body.stars);
+            let rating = ((overallRating * ratesCount) + newRating) / (ratesCount + 1);
+            rating=rating.toFixed(1);
+            product.stars=rating;
             product.comments.push({...req.body});
+            product.commentsCount = product.comments.length;
             try {
                 await product.save();
                 res.status(200).json({comment:product.comments.pop()});
@@ -25,7 +39,13 @@ module.exports.addComment = async (req, res)=>{
 };
 
 module.exports.getProduct = async (req, res)=>{
+    console.log(req.query.count)
     let productId = req.params.id;
+    let count = req.query.count? parseInt(req.query.count):0;
+    if(!Number.isInteger(count)){
+        errorHandler(res, 400,null, 'Invalid type of count');
+        return;
+    }
     let product;
     try {
         product =await Product.findById(productId).
@@ -34,6 +54,12 @@ module.exports.getProduct = async (req, res)=>{
         populate('fragrance').
         populate('gender');
         if(product){
+            let min = 0>product.comments.length-count-12?
+                0:product.comments.length-count-12;
+            product.comments = product.comments.
+            slice(min,product.comments.length-count).
+            reverse();
+            console.log(product.comments)
             res.status(200).json({product});
         }else{
             errorHandler(res, 404,null, 'Product not found');

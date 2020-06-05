@@ -79,6 +79,10 @@ const productSchema = mongoose.Schema({
     comments:{
         type:[commentSchema],
     },
+    commentsCount:{
+        type:Number,
+        default:0
+    }
 });
 
 module.exports = mongoose.model('Product', productSchema);
