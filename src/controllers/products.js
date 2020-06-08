@@ -39,7 +39,6 @@ module.exports.addComment = async (req, res)=>{
 };
 
 module.exports.getProduct = async (req, res)=>{
-    console.log(req.query.count)
     let productId = req.params.id;
     let count = req.query.count? parseInt(req.query.count):0;
     if(!Number.isInteger(count)){
@@ -59,7 +58,6 @@ module.exports.getProduct = async (req, res)=>{
             product.comments = product.comments.
             slice(min,product.comments.length-count).
             reverse();
-            console.log(product.comments)
             res.status(200).json({product});
         }else{
             errorHandler(res, 404,null, 'Product not found');

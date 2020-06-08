@@ -4,12 +4,20 @@ const Product = require('../models/product');
 const errorHandler = require('./utils/error-handler');
 
 module.exports.addOrder = async (req, res)=>{
-    if(!req.user) {
-        errorHandler(res, 400,null,'Invalid user type');
+    if(!req.body.products || req.body.products.length<1) {
+        errorHandler(res, 400,null,'Invalid array of products');
         return;
     }
-    if(!req.body.products) {
-        errorHandler(res, 400,null,'Invalid array of products');
+    if(!req.body.address) {
+        errorHandler(res, 400,null,'Укажите адрес доставки');
+        return;
+    }
+    if(!req.body.deliveryType) {
+        errorHandler(res, 400,null,'Укажите способ доставки');
+        return;
+    }
+    if(!req.body.paymentType) {
+        errorHandler(res, 400,null,'Укажите тип платежа');
         return;
     }
     let user;
@@ -26,10 +34,15 @@ module.exports.addOrder = async (req, res)=>{
         return;
     }
     try{
-        productIdArray = req.body.products.map(id=>(id));
-        let productPrises = await Product.find({'_id':{ $in: productIdArray}}, 'fullPrise -_id');
-        productPrises = productPrises.map(item=>item.fullPrise);
-        console.log(productPrises)
+        productIdArray = req.body.products;
+
+        let productPrises = await Product.find({'_id':{ $in: productIdArray}}, 'fullPrise _id');
+
+        productPrises = productPrises.map(item=>{
+            let count = productIdArray.filter(id=>item._id.equals(id)).length;
+
+            return item.fullPrise*count});
+
         orderPrise = productPrises.reduce((sum, value)=>(sum+value));
     }catch (e) {
         errorHandler(res, 400,e);
@@ -40,13 +53,15 @@ module.exports.addOrder = async (req, res)=>{
         products:productIdArray,
         totalPrise:orderPrise,
         address:req.body.address,
+        deliveryType:req.body.deliveryType,
+        paymentType:req.body.paymentType,
         history:[{state:'Принят на рассмотрение', date:Date.now()}]
     });
     try{
         await order.save();
         user.orders.push(order);
         await user.save();
-        res.status(200).json({message: 'Заказ принят к рассмотрению'});
+        res.status(200).json({message: 'Заказ принят к рассмотрению', orderId:order._id});
     } catch (e) {
         errorHandler(res, 400,e);
     }

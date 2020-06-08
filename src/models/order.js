@@ -18,8 +18,13 @@ const orderSchema = mongoose.Schema({
     },
     paymentType:{
         type:String,
-        enum:['Наложенный платеж'],
-        default: 'Наложенный платеж',
+        enum:['Наложенный платёж'],
+        required:true
+    },
+    deliveryType:{
+        type:String,
+        enum:['Почта России', 'EMS', 'CDEK', 'DPD'],
+        required:true
     },
     state:{
         type:String,
