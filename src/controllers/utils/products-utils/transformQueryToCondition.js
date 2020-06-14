@@ -22,11 +22,13 @@ module.exports= (queries) => {
     if(queries.isNovelty) offers.$or.push({isNovelty: true});
     if(offers.$or.length!==0) arr.push(offers);
 
-    if(queries.min!==undefined)
+    if(queries.min)
         arr.push({fullPrise:{ $gt: queries.min }});
-    if(queries.max!==undefined)
+    if(queries.max)
         arr.push({fullPrise:{ $lt: queries.max }});
-
+    if (queries.find){
+        arr.push({ name: { $regex: queries.find, $options: "i" } });
+    }
     if (arr.length !== 0)
         return {$and: arr};
     else

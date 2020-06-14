@@ -15,7 +15,11 @@ const commentSchema = mongoose.Schema({
     message:{
         type:String,
         default:'...'
-    }
+    },
+    isRemoved:{
+        type:Boolean,
+        default:false
+    },
 },{
     timestamps: true
 });

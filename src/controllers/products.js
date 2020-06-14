@@ -4,9 +4,35 @@ const Product = require('../models/product');
 const TransformToCondition = require('./utils/products-utils/transformQueryToCondition');
 const getPage = require('./utils/products-utils/get-page');
 const errorHandler = require('../controllers/utils/error-handler');
+const config = require('../../config');
 
-
-
+module.exports.removeOrRestoreComment = async (req, res)=>{
+    if(req.user.role!=='Admin'){
+        errorHandler(res, 403,null,'Only admin can use this route!');
+        return;
+    }
+    let productId = req.params.id;
+    let commentId = req.body.commentId;
+    try {
+        let product =await Product.findById(productId);
+        if(product){
+            product.comments = product.comments.map(comment=>{
+                if(comment._id.equals(commentId)) comment.isRemoved=req.body.isRemoved;
+                return comment;
+            });
+            try {
+                await product.save();
+                res.status(200).json({commentId:commentId, isRemoved:req.body.isRemoved})
+            } catch (e) {
+                errorHandler(res, 500,e);
+            }
+        }else{
+            errorHandler(res, 404,null,'Product not found');
+        }
+    }catch (e) {
+        errorHandler(res, 500,e);
+    }
+};
 module.exports.addComment = async (req, res)=>{
     if(!req.body.stars ){
         errorHandler(res, 400,null,'Пожалуйста, оцените этот товар');
@@ -53,11 +79,14 @@ module.exports.getProduct = async (req, res)=>{
         populate('fragrance').
         populate('gender');
         if(product){
+            product.comments = product.comments.filter(comment=>comment.isRemoved===false);
+            product.commentsCount=product.comments.length;
             let min = 0>product.comments.length-count-12?
                 0:product.comments.length-count-12;
             product.comments = product.comments.
             slice(min,product.comments.length-count).
             reverse();
+            product.image=`${config.apiUrl}:${config.port}/${product.image}`;
             res.status(200).json({product});
         }else{
             errorHandler(res, 404,null, 'Product not found');
@@ -86,39 +115,123 @@ module.exports.getAll = (req, res)=>{
             error:err
         });
         let page = getPage(req.query, products, err);
+        page.products=page.products.map(product => {
+            product.image = `${config.apiUrl}:${config.port}/${product.image}`;
+            return product;
+        });
         res.status(200).json(page);
     });
 };
 
 module.exports.create = async (req, res)=>{
-    if(!req.file) return res.status(415).json({message: 'Формат не определен!'});
-
+    if(req.user.role!=='Admin'){
+        errorHandler(res, 403,null,'Only admin can use this route!');
+        return;
+    }
+    if(!req.file) {
+        errorHandler(res, 415,null,'The image is required!');
+        return;
+    }
     const tempPath = req.file.path;
     const targetPath = './images/'+ req.file.filename+'.jpg';
 
     if (path.extname(req.file.originalname).toLowerCase() !== ".jpg"){
-        fs.unlink(tempPath, (err)=>{
-            if (err) throw err;
-            console.log('file successfully deleted')});
-        return res.status(415).json({message: 'Данный формат файла не поддерживается!'});
+        try {
+            fs.unlinkSync(tempPath);
+        } catch (e) {
+            errorHandler(res, 500,e);
+            return;
+        }
+        errorHandler(res, 415,null,'Invalid image type!');
+        return;
     }
-
-    fs.rename(tempPath, targetPath, (err)=>{
-        if (err) return res.status(500).json({message:err.message? err.message:err});
-        console.log('file successfully renamed')
-    });
-
+    try {
+        fs.renameSync(tempPath, targetPath);
+    } catch (e) {
+        errorHandler(res, 500,e);
+        return;
+    }
     let product = new Product(req.body);
-    product.image='http://176.197.36.4:8000/'+req.file.filename+'.jpg';
-
+    product.image=req.file.filename+'.jpg';
     try {
         await product.save()
-    } catch (e) {
-        fs.unlink(targetPath, (err)=>{
-            if(err) throw err;
-            console.log('file successfully deleted')
-        });
-        return res.status(409).json({message:e.message?e.message:e});
+    } catch (err) {
+        try {
+            fs.unlinkSync(targetPath);
+        }catch (e) {
+            errorHandler(res, 500,e);
+            return;
+        }
+        errorHandler(res, 409,err);
+        return;
     }
-    res.status(201).json({message: 'Продукт успешно добавлен!'});
+    res.status(201).json({message: 'Product added'});
+};
+module.exports.update = async (req, res)=>{
+    if(req.user.role!=='Admin'){
+        errorHandler(res, 403,null,'Only admin can use this route!');
+        return;
+    }
+    let product;
+    try {
+        product =await Product.findById(req.params.id)
+    }catch (e) {
+        errorHandler(res, 500,e);
+        return;
+    }
+    if(!product){
+        errorHandler(res, 404,null,'Product not found!');
+        return;
+    }
+    const tempPath = req.file && req.file.path;
+    const targetPath = req.file && './images/'+ req.file.filename+'.jpg';
+    let oltImage = product.image;
+    if(req.file) {
+        if (path.extname(req.file.originalname).toLowerCase() !== ".jpg"){
+            try {
+                fs.unlinkSync(tempPath);
+            }catch (e) {
+                errorHandler(res, 500,e);
+                return;
+            }
+            errorHandler(res, 415,null, 'Invalid image type!');
+            return;
+        }
+        try {
+            fs.renameSync(tempPath, targetPath);
+        }catch (e) {
+            errorHandler(res, 500, e);
+            return;
+        }
+        product.image=req.file.filename+'.jpg';
+    }
+    product.name=req.body.name;
+    product.description=req.body.description;
+    product.amount=req.body.amount;
+    product.count=req.body.count;
+    product.isDiscount=req.body.isDiscount;
+    product.isNovelty=req.body.isNovelty;
+    product.fullPrise=req.body.fullPrise;
+    product.perfumeType=req.body.perfumeType;
+    product.brand=req.body.brand;
+    product.gender=req.body.gender;
+    product.fragrance=req.body.fragrance;
+    try {
+        await product.save()
+    } catch (err) {
+        try {
+            fs.unlinkSync(targetPath);
+        }catch (e) {
+            errorHandler(res, 500,e);
+            return;
+        }
+        errorHandler(res, 409,err);
+        return;
+    }
+    if(req.file){
+        try {
+            fs.unlinkSync('./images/'+oltImage);
+        }catch (e) {}
+    }
+    res.status(200).json({message: 'Продукт успешно обновлен!'});
 };
