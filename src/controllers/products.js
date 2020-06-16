@@ -63,7 +63,19 @@ module.exports.addComment = async (req, res)=>{
         errorHandler(res, 500,e);
     }
 };
-
+module.exports.removeProduct = async (req, res)=>{
+    if(req.user.role!=='Admin'){
+        errorHandler(res, 403,null,'Only admin can use this route!');
+        return;
+    }
+    let productId = req.params.id;
+    try {
+        await Product.find({ _id:productId }).remove().exec();
+        res.status(200).json({message:'Product was removed!'});
+    }catch (e) {
+        errorHandler(res, 500,e);
+    }
+};
 module.exports.getProduct = async (req, res)=>{
     let productId = req.params.id;
     let count = req.query.count? parseInt(req.query.count):0;
