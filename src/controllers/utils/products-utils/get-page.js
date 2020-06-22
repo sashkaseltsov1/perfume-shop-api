@@ -21,6 +21,5 @@ module.exports = (query, arr, err)=>{
         page:page,
         pageCount:pageCount,
         error:err,
-        queries:query
     };
 };

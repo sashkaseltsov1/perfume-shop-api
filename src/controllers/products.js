@@ -4,7 +4,6 @@ const Product = require('../models/product');
 const TransformToCondition = require('./utils/products-utils/transformQueryToCondition');
 const getPage = require('./utils/products-utils/get-page');
 const errorHandler = require('../controllers/utils/error-handler');
-const config = require('../../config');
 
 module.exports.removeOrRestoreComment = async (req, res)=>{
     if(req.user.role!=='Admin'){
@@ -98,7 +97,6 @@ module.exports.getProduct = async (req, res)=>{
             product.comments = product.comments.
             slice(min,product.comments.length-count).
             reverse();
-            product.image=`${config.apiUrl}:${config.port}/${product.image}`;
             res.status(200).json({product});
         }else{
             errorHandler(res, 404,null, 'Product not found');
@@ -127,10 +125,6 @@ module.exports.getAll = (req, res)=>{
             error:err
         });
         let page = getPage(req.query, products, err);
-        page.products=page.products.map(product => {
-            product.image = `${config.apiUrl}:${config.port}/${product.image}`;
-            return product;
-        });
         res.status(200).json(page);
     });
 };

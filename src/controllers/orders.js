@@ -2,7 +2,6 @@ const Order = require('../models/order');
 const User = require('../models/user');
 const Product = require('../models/product');
 const errorHandler = require('./utils/error-handler');
-const config = require('../../config');
 module.exports.addOrder = async (req, res)=>{
     if(!req.body.products || req.body.products.length<1) {
         errorHandler(res, 400,null,'Invalid array of products');
@@ -55,7 +54,7 @@ module.exports.addOrder = async (req, res)=>{
         address:req.body.address,
         deliveryType:req.body.deliveryType,
         paymentType:req.body.paymentType,
-        history:[{state:'Принят на рассмотрение', date:Date.now()}]
+        history:[{state:'Оформлен', date:Date.now()},{state:'Принят на рассмотрение', date:Date.now()}]
     });
     try{
         await order.save();
@@ -83,10 +82,6 @@ module.exports.getOrder = async (req, res)=>{
             errorHandler(res, 403,null, 'Access denied');
             return;
         }
-        order.products=order.products.map(product => {
-            product.image = `${config.apiUrl}:${config.port}/${product.image}`;
-            return product;
-        });
         res.status(200).json({order:order});
     }else{
         errorHandler(res, 404,null, 'Order not found');

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const config = require('../../config');
 
 const commentSchema = mongoose.Schema({
     username:{
@@ -60,7 +61,12 @@ const productSchema = mongoose.Schema({
         type:Boolean,
         default: false
     },
-    image:String,
+    image:{
+        type:String,
+        get:(value)=>{
+            return `${config.apiUrl}:${config.port}/${value}`;
+        }
+    },
     brand:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Brand',
@@ -87,6 +93,9 @@ const productSchema = mongoose.Schema({
         type:Number,
         default:0
     }
+},{
+    toJSON: {getters: true},
+    toObject: {getters: true}
 });
 
 module.exports = mongoose.model('Product', productSchema);
