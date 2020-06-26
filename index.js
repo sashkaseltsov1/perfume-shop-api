@@ -5,7 +5,7 @@ const config = require('./config');
 
 mongoose.set('useFindAndModify', false);
 mongoose.connect(config.dbUrl,
-    {useNewUrlParser: true, useUnifiedTopology: true},
+    {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex : true },
     (err) => {
         if (err) return console.log(err);
 

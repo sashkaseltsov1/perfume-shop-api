@@ -1,6 +1,12 @@
 const express = require('express');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const path = require('path');
+const filters = require('./src/routes/filters');
+const products = require('./src/routes/products');
+const auth = require('./src/routes/auth');
+const user = require('./src/routes/user');
+const orders = require('./src/routes/orders');
 
 const app = express();
 
@@ -21,16 +27,17 @@ app.use((req, res, next)=> {
     next();
 });
 
-const filters = require('./src/routes/filters');
-const products = require('./src/routes/products');
-const auth = require('./src/routes/auth');
-const user = require('./src/routes/user');
-const orders = require('./src/routes/orders');
-
 app.use('/api/filters', filters);
 app.use('/api/products', products);
 app.use('/api/auth', auth);
 app.use('/api/user', user);
 app.use('/api/orders', orders);
+
+if(process.env.NODE_ENV==='production'){
+    app.use('/', express.static(path.join(__dirname, 'perfume-shop', 'build')));
+    app.get('*', (req, res)=>{
+        res.sendFile(path.join(__dirname, 'perfume-shop', 'build', 'index.html'));
+    })
+}
 
 module.exports=app;
