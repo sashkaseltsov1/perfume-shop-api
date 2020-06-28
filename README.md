@@ -4,7 +4,7 @@
 The API was developed on platform NodeJS using Express Framework and Mongoose for MongoDB object modeling.
 # Table of contents
 1. [Usage](#usage)
-2. [config.js](#config)
+2. [config](#config)
 3. [API documentation](#API)
 
 # Usage
@@ -24,7 +24,8 @@ npm run start
 or 
 npm run dev
 ```
-# config.js
+# config
+config.js options:  
 Option          | Description
 ----------------|----------------------
 dbUrl           | Database connection string
