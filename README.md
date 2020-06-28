@@ -2,7 +2,7 @@
 
 **Perfume-shop-api** is a rest-API who was developed for a perfume shop [SPIRIT.RU](http://perfume-shop-spirit.ru). 
 The API was developed on platform NodeJS using Express Framework and Mongoose for MongoDB object modeling.
-# Table of contents
+
 1. [Usage](#usage)
 2. [Config](#config)
 3. [API documentation](#API)  
