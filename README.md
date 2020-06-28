@@ -5,9 +5,9 @@ The API was developed on platform NodeJS using Express Framework and Mongoose fo
 # Table of contents
 1. [Usage](#usage)
 2. [Config](#config)
-3. [API documentation](#API)
-3.1. [Authenticate](### api/auth/signin)
-3.2. [Filters](### /api/filters/)
+3. [API documentation](#API)  
+3.1. [Authenticate](#api/auth/signin)  
+3.2. [Filters](#/api/filters/)  
 
 # Usage
 1. Clone and install:  
