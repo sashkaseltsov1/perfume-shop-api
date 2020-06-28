@@ -34,11 +34,11 @@ expiresIn       | Time when token expired
 
 # API
 ### api/auth/signin (POST) 
-_Sign in_
+_Sign in._
 #### :black_small_square: Request:  
 >* Headers:  
 > Content-Type: application/json
->* Data:  
+>* Body:  
 > email: _required(string)_  
 > password: _required(string)_  
 #### :black_small_square: Response:
@@ -50,11 +50,11 @@ _Sign in_
 ```
 ---
 ### api/auth/signup (POST) 
-_Sign up_
+_Sign up._
 #### :black_small_square: Request:  
 >* Headers:  
 > Content-Type: application/json
->* Data:  
+>* Body:  
 > email: _required(string)_  
 > name: _required(string)_  
 > lastname: _required(string)_  
@@ -68,11 +68,11 @@ _Sign up_
 ```
 ---
 ### api/auth/refresh-token (PUT) 
-_Generate new tokens_
+_Generate new tokens._
 #### :black_small_square: Request:  
 >* Headers:  
 > Content-Type: application/json
->* Data:  
+>* Body:  
 > refreshToken: _required(string)_  
 #### :black_small_square: Response:
 ```
@@ -83,7 +83,10 @@ _Generate new tokens_
 ```
 ---
 ### /api/filters/ (GET) 
-_Get all categories_
+_Get all categories._
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json 
 #### :black_small_square: Response:
 ```
 {
@@ -92,7 +95,10 @@ _Get all categories_
 ```
 ---
 ### /api/filters/:category (GET) 
-_Get category by id_
+_Get category by id._
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json 
 #### :black_small_square: Response:
 ```
 {
@@ -103,12 +109,12 @@ _Get category by id_
 ```
 ---
 ### /api/filters/:category (POST) 
-_Add new option in category(only for admin)_
+_Add new option in category(only for admin)._
 #### :black_small_square: Request:  
 >* Headers:  
 > Content-Type: application/json  
 > Authorization: Bearer token
->* Data:  
+>* Body:  
 > type: _required(string)_  
 #### :black_small_square: Response:
 ```
@@ -120,7 +126,7 @@ _Add new option in category(only for admin)_
 ```
 ---
 ### /api/filters/:category/:optionId (DELETE) 
-_Remove option in category(only for admin)_
+_Remove option in category(only for admin)._
 #### :black_small_square: Request:  
 >* Headers:  
 > Content-Type: application/json  
@@ -135,7 +141,7 @@ _Remove option in category(only for admin)_
 ```
 ---
 ### /api/orders/:id (GET) 
-_Get order by id_
+_Get order by id._
 #### :black_small_square: Request:  
 >* Headers:  
 > Content-Type: application/json  
@@ -148,8 +154,19 @@ _Get order by id_
 ```
 ---
 ### /api/products?query (GET) 
-_Return filtered products using query string_  
-All params:  
+_Return filtered products using query string. All query params:_   
+* _gender=genderId_  
+* _fragrance=array of fragranceId_
+* _perfumeType=perfumeTypeId_  
+* _brand=brandId_ 
+* _isNovelty=true or false_ 
+* _isDiscount=true or false_
+* _sort='dec' or 'inc'_
+* _find=string for search_  
+* _page=page number_  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json 
 #### :black_small_square: Response:
 ```
 {
@@ -160,11 +177,57 @@ All params:
 ```
 ---
 ### /api/products/:id?count (GET) 
-_Return product by id, 'count' is a query param for comments pagination_
+_Return product by id. 'count' is a query param for comments pagination._
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json 
 #### :black_small_square: Response:
 ```
 {
   product:Object
+}
+```
+---
+### /api/products/:id (POST) 
+_Add new comment. 'id' is a param of product._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json  
+>* Body:  
+> stars: _required(number)_  
+> username: _string_  
+> message: _string_  
+#### :black_small_square: Response:
+```
+{
+  comment:Object
+}
+```
+---
+### /api/products/ (POST) 
+_Create new product (only for admin)._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: multipart/form-data  
+> Authorization: Bearer token 
+> file: _required(File)_  
+>* Body:  
+
+> name: _required(string)_   
+> amount: _required(number)_  
+> fullPrise: _required(number)_  
+> count: _required(number)_   
+> description: _string_  
+> isDiscount: _bool_  
+> isNovelty: _bool_  
+> brand: _required(string)_  
+> gender: _required(string)_  
+> perfumeType: _required(string)_  
+> fragrance: _required(Object)_  
+#### :black_small_square: Response:
+```
+{
+  message:string
 }
 ```
 ---
