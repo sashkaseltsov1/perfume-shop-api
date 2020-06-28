@@ -210,9 +210,8 @@ _Create new product (only for admin)._
 >* Headers:  
 > Content-Type: multipart/form-data  
 > Authorization: Bearer token 
-> file: _required(File)_  
+>* File: _required(File)_  
 >* Body:  
-
 > name: _required(string)_   
 > amount: _required(number)_  
 > fullPrise: _required(number)_  
@@ -224,6 +223,62 @@ _Create new product (only for admin)._
 > gender: _required(string)_  
 > perfumeType: _required(string)_  
 > fragrance: _required(Object)_  
+#### :black_small_square: Response:
+```
+{
+  message:string
+}
+```
+---
+### /api/products/remove-restore-comment/:id (PUT) 
+_Remove or restore comment. 'id' is a product id (only for admin)._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json 
+> Authorization: Bearer token 
+>* Body:  
+> commentId: _required(string)_   
+> isRemoved: _required(bool)_    
+#### :black_small_square: Response:
+```
+{
+  commentId:string,
+  isRemoved:bool
+}
+```
+---
+### /api/products/:id (PUT) 
+_Update product by id (only for admin)._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: multipart/form-data  
+> Authorization: Bearer token 
+>* File: _File_  
+>* Body:  
+> name: _required(string)_   
+> amount: _required(number)_  
+> fullPrise: _required(number)_  
+> count: _required(number)_   
+> description: _string_  
+> isDiscount: _bool_  
+> isNovelty: _bool_  
+> brand: _required(string)_  
+> gender: _required(string)_  
+> perfumeType: _required(string)_  
+> fragrance: _required(Object)_  
+#### :black_small_square: Response:
+```
+{
+  message:string
+}
+```
+---
+### /api/products/:id (DELETE) 
+_Remove product by id (only for admin)._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json  
+> Authorization: Bearer token   
 #### :black_small_square: Response:
 ```
 {
