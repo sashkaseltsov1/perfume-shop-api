@@ -1,19 +1,11 @@
 # perfume-shop-api
 
-# Table of Contents
-1. [Example](#example)
-2. [Example2](#example2)
-3. [Third Example](#third-example)
-
-## Example
-## Example2
-
-
 **Perfume-shop-api** is a rest-API who was developed for a perfume shop [SPIRIT.RU](http://perfume-shop-spirit.ru). 
 The API was developed on platform NodeJS using Express Framework and Mongoose for MongoDB object modeling.
-
-Path for temp uploads folder: `./uploads`  
-Path for product image folder: `./images`
+# Table of contents
+1. [Usage](#usage)
+2. [config.js](#config.js)
+3. [API documentation](#API)
 
 # Usage
 1. Clone and install:  
