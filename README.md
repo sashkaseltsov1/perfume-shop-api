@@ -1,5 +1,14 @@
 # perfume-shop-api
 
+# Table of Contents
+1. [Example](#example)
+2. [Example2](#example2)
+3. [Third Example](#third-example)
+
+## Example
+## Example2
+
+
 **Perfume-shop-api** is a rest-API who was developed for a perfume shop [SPIRIT.RU](http://perfume-shop-spirit.ru). 
 The API was developed on platform NodeJS using Express Framework and Mongoose for MongoDB object modeling.
 
@@ -286,3 +295,37 @@ _Remove product by id (only for admin)._
 }
 ```
 ---
+### /api/user/ (GET) 
+_Get profile data._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json  
+> Authorization: Bearer token   
+#### :black_small_square: Response:
+```
+{
+  user:Object
+}
+```
+---
+### /api/user/ (PUT) 
+_Update profile data._  
+#### :black_small_square: Request:  
+>* Headers:  
+> Content-Type: application/json  
+> Authorization: Bearer token  
+>* Body:  
+> name: _string_   
+> lastname: _string_   
+> phone: _string_   
+> address: _string_   
+> password: _string_   
+> newPassword: _string_   
+#### :black_small_square: Response:
+```
+{
+  message:string
+}
+```
+---
+## Third Example
