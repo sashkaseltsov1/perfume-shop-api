@@ -4,7 +4,7 @@
 The API was developed on platform NodeJS using Express Framework and Mongoose for MongoDB object modeling.
 # Table of contents
 1. [Usage](#usage)
-2. [config.js](#config.js)
+2. [config.js](#config)
 3. [API documentation](#API)
 
 # Usage
@@ -320,4 +320,4 @@ _Update profile data._
 }
 ```
 ---
-## Third Example
+
