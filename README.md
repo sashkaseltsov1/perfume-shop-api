@@ -4,8 +4,10 @@
 The API was developed on platform NodeJS using Express Framework and Mongoose for MongoDB object modeling.
 # Table of contents
 1. [Usage](#usage)
-2. [config](#config)
+2. [Config](#config)
 3. [API documentation](#API)
+3.1. [Authenticate](### api/auth/signin)
+3.2. [Filters](### /api/filters/)
 
 # Usage
 1. Clone and install:  
@@ -24,7 +26,7 @@ npm run start
 or 
 npm run dev
 ```
-# config
+# Config
 config.js options:  
 Option          | Description
 ----------------|----------------------
