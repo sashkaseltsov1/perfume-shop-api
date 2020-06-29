@@ -13,11 +13,7 @@ The API was developed on platform NodeJS using Express Framework and Mongoose fo
 git clone https://github.com/sashkaseltsov1/perfume-shop-api.git
 npm install
 ```
-2. Create folders for temp uploads and product images:  
-```
-mkdir uploads
-mkdir images
-```
+2.'./perfume-shop/build/' is a folder for frontend static files  
 3. Run project in production or development mode:
 ```
 npm run start 
@@ -29,7 +25,7 @@ config.js options:
 Option          | Description
 ----------------|----------------------
 dbUrl           | Database connection string
-apiUrl          | Url for generate path to static product images
+apiUrl          | Public url for generate path to static product images
 port            | Listening port
 secret          | Secret key for JWT tokens
 expiresIn       | Time when token expired
