@@ -1,8 +1,11 @@
 module.exports = {
-    dbUrl: 'mongodb+srv://admin:sashkaseltsov1@clusterperfumeshop-taas5.gcp.mongodb.net/ClusterPerfumeShop?retryWrites=true&w=majority',
+    dbUrl: 'mongodb+srv://admin:password@clusterperfumeshop-taas5.gcp.mongodb.net/ClusterPerfumeShop?retryWrites=true&w=majority',
     apiUrl:'http://176.197.36.4',
     port:8000,
-    secret: 'R2d2F4aaa',
+    secret: 'JWTSecret',
+    allowedOrigins:[
+        'http://176.197.36.4:3000', 'http://localhost:3000'
+    ],
     tokens:{
         accessToken:{
             type:'access',

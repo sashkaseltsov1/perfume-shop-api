@@ -2,6 +2,7 @@ const Order = require('../models/order');
 const User = require('../models/user');
 const Product = require('../models/product');
 const errorHandler = require('./utils/error-handler');
+
 module.exports.addOrder = async (req, res)=>{
     if(!req.body.products || req.body.products.length<1) {
         errorHandler(res, 400,null,'Invalid array of products');

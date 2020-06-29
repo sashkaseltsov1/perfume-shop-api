@@ -59,7 +59,6 @@ module.exports.getAll = async (req, res)=>{
     res.status(200).json({filters:filters});
 };
 module.exports.getFilter = async (req, res)=>{
-
     let filterName = req.params.category;
     try {
         let [filter, schema] = await getByFilterName(filterName);

@@ -7,6 +7,7 @@ const products = require('./src/routes/products');
 const auth = require('./src/routes/auth');
 const user = require('./src/routes/user');
 const orders = require('./src/routes/orders');
+const config = require('./config');
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('images'));
 app.use((req, res, next)=> {
-    let allowedOrigins = ['http://176.197.36.4:3000', 'http://localhost:3000'];
+    let allowedOrigins = config.allowedOrigins;
     let origin = req.headers.origin;
     if(allowedOrigins.indexOf(origin) > -1){
         res.setHeader('Access-Control-Allow-Origin', origin);
