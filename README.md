@@ -13,7 +13,7 @@ The API was developed on platform NodeJS using Express Framework and Mongoose fo
 git clone https://github.com/sashkaseltsov1/perfume-shop-api.git
 npm install
 ```
-2.'./perfume-shop/build/' is a folder for frontend static files  
+2. './perfume-shop/build/' is a folder for frontend static files.  
 3. Run project in production or development mode:
 ```
 npm run start 
