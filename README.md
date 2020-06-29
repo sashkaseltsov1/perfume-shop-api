@@ -28,6 +28,7 @@ config.js options:
 Option          | Description
 ----------------|----------------------
 dbUrl           | Database connection string
+allowedOrigins           | Array of allowed origins
 apiUrl          | Public url for generate path to static product images
 port            | Listening port
 secret          | Secret key for JWT tokens
