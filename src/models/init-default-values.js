@@ -1,7 +1,7 @@
 const Gender = require('./gender');
 const Brand = require('./brand');
 const Fragrance = require('./fragrance');
-const PerfumeType = require('./perfume-type')
+const PerfumeType = require('./perfume-type');
 
 module.exports = ()=>{
     const genders = [{ type: 'Мужские' }, { type: 'Женские' }, {type:'Нишевые'}];
