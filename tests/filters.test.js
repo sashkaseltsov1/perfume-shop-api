@@ -59,11 +59,9 @@ describe('Test route: /api/filters', ()=> {
             })
     });
     it('Access should be denied if non-admin tries to remove filter', async ()=> {
-        let brand=new Brand({type:'Some brand'});
-        await brand.save();
         let object = await dbHandler.generateMockUser('User');
         return request(app)
-            .delete(`/api/filters/brand/${brand._id}`)
+            .delete(`/api/filters/brand/some_brand_id`)
             .set('Accept', 'application/json')
             .set('Authorization', object.token)
             .expect('Content-Type', /json/)

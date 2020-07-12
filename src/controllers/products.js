@@ -69,7 +69,7 @@ module.exports.removeProduct = async (req, res)=>{
     }
     let productId = req.params.id;
     try {
-        await Product.find({ _id:productId }).remove().exec();
+        await Product.deleteOne({ _id:productId });
         res.status(200).json({message:'Product was removed!'});
     }catch (e) {
         errorHandler(res, 500,e);
@@ -134,36 +134,37 @@ module.exports.create = async (req, res)=>{
         errorHandler(res, 403,null,'Only admin can use this route!');
         return;
     }
-    if(!req.file) {
-        errorHandler(res, 415,null,'The image is required!');
-        return;
-    }
-    const tempPath = req.file.path;
-    const targetPath = './images/'+ req.file.filename+'.jpg';
-
-    if (path.extname(req.file.originalname).toLowerCase() !== ".jpg"){
+    let tempPath;
+    let targetPath;
+    if(req.file) {
+        tempPath = req.file.path;
+        targetPath = './images/'+ req.file.filename+'.jpg';
+        if (path.extname(req.file.originalname).toLowerCase() !== ".jpg"){
+            try {
+                fs.unlinkSync(tempPath);
+            } catch (e) {
+                errorHandler(res, 500,e);
+                return;
+            }
+            errorHandler(res, 415,null,'Invalid image type!');
+            return;
+        }
         try {
-            fs.unlinkSync(tempPath);
+            fs.renameSync(tempPath, targetPath);
         } catch (e) {
             errorHandler(res, 500,e);
             return;
         }
-        errorHandler(res, 415,null,'Invalid image type!');
-        return;
-    }
-    try {
-        fs.renameSync(tempPath, targetPath);
-    } catch (e) {
-        errorHandler(res, 500,e);
-        return;
     }
     let product = new Product(req.body);
-    product.image=req.file.filename+'.jpg';
+    if(req.file){
+        product.image=req.file.filename+'.jpg';
+    }
     try {
         await product.save()
     } catch (err) {
         try {
-            fs.unlinkSync(targetPath);
+            targetPath && fs.unlinkSync(targetPath);
         }catch (e) {
             errorHandler(res, 500,e);
             return;

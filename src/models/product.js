@@ -70,12 +70,10 @@ const productSchema = mongoose.Schema({
     brand:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Brand',
-        required:true,
     },
     gender:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Gender',
-        required:true,
     },
     fragrance:[{
         type:mongoose.Schema.Types.ObjectId,
@@ -84,7 +82,6 @@ const productSchema = mongoose.Schema({
     perfumeType:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'PerfumeType',
-        required:true,
     },
     comments:{
         type:[commentSchema],
