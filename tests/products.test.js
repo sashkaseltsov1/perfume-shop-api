@@ -201,4 +201,74 @@ describe('Test route: /api/products', ()=> {
                 expect(res.status).to.equal(403)
             })
     });
+    it('Comment should be added', async ()=> {
+        let product = new Product({
+            name:'product',
+            amount:30,
+            count:1,
+            fullPrise:1000,
+        });
+        await product.save();
+        return request(app)
+            .post(`/api/products/${product._id}`)
+            .set('Accept', 'application/json')
+            .send({
+                stars:3,
+            })
+            .then(res=>{
+                expect(res.status).to.equal(200)
+            })
+    });
+    it('Comment should be marked as removed', async ()=> {
+        let product = new Product({
+            name:'product',
+            amount:30,
+            count:1,
+            fullPrise:1000,
+            comments:[
+                {
+                    stars:1
+                }
+            ]
+        });
+        let object = await dbHandler.generateMockUser('Admin');
+        await product.save();
+        return request(app)
+            .put(`/api/products/remove-restore-comment/${product._id}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', object.token)
+            .send({
+                commentId:product.comments[0]._id,
+                isRemoved:true
+            })
+            .then(res=>{
+                expect(res.status).to.equal(200)
+            })
+    });
+    it('Comment should be marked as removed only by admin', async ()=> {
+        let product = new Product({
+            name:'product',
+            amount:30,
+            count:1,
+            fullPrise:10000,
+            comments:[
+                {
+                    stars:2
+                }
+            ]
+        });
+        let object = await dbHandler.generateMockUser('User');
+        await product.save();
+        return request(app)
+            .put(`/api/products/remove-restore-comment/${product._id}`)
+            .set('Accept', 'application/json')
+            .set('Authorization', object.token)
+            .send({
+                commentId:product.comments[0]._id,
+                isRemoved:true
+            })
+            .then(res=>{
+                expect(res.status).to.equal(403)
+            })
+    });
 });

@@ -1,18 +1,22 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const bcrypt = require('bcryptjs');
+
 const mockedDb = new MongoMemoryServer();
-module.exports.generateMockUser = async (role)=>{
+module.exports.generateMockUser = async (role, email='sasa@mail.ru')=>{
     const User = require('../../src/models/user');
-    let admin = new User({
+    let salt = bcrypt.genSaltSync(10);
+    let user = new User({
         name:'sasa',
         lastname:'sasa',
-        email:'sasa@mail.ru',
-        password:'123456',
+        email:email,
+        password:bcrypt.hashSync('123456', salt),
         role:role
     });
-    await admin.save();
-    let token = require('../../src/controllers/utils/auth-utils/generate-tokens').generateAccessToken(admin);
-    return {admin, token}
+    let token = require('../../src/controllers/utils/auth-utils/generate-tokens').generateAccessToken(user);
+    user.refreshToken=require('../../src/controllers/utils/auth-utils/generate-tokens').generateRefreshToken(user);
+    await user.save();
+    return {user, token}
 };
 module.exports.connect = async () => {
     const uri = await mockedDb.getUri();
