@@ -17,12 +17,15 @@ npm install
 ```
 ./perfume-shop/build/
 ```
-3. Run project in production or development mode:
+3. Run project in production/development mode or run tests:
 ```
 npm run start 
 or 
 npm run dev
+or
+npm run test
 ```
+
 # Config
 config.js options:  
 Option          | Description
